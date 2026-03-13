@@ -15,17 +15,21 @@ import {
   Sun,
   Moon,
   ChevronRight,
+  BarChart3,
+  Sparkles,
 } from "lucide-react";
 
 const routeLabels: Record<string, { label: string; icon: React.ElementType }> = {
-  "/dashboard": { label: "Dashboard", icon: LayoutDashboard },
-  "/processes": { label: "Processos", icon: Gavel },
-  "/calendar": { label: "Agenda", icon: Calendar },
+  "/dashboard": { label: "Painel Principal", icon: LayoutDashboard },
+  "/processes": { label: "Meus Processos", icon: Gavel },
+  "/calendar": { label: "Agenda Jurídica", icon: Calendar },
   "/documents": { label: "Documentos", icon: FileText },
-  "/crm": { label: "CRM", icon: Users },
+  "/crm": { label: "Meus Clientes", icon: Users },
   "/finance": { label: "Financeiro", icon: Wallet },
-  "/backoffice": { label: "Backoffice", icon: ShieldCheck },
+  "/backoffice": { label: "Administração", icon: ShieldCheck },
   "/settings": { label: "Configurações", icon: Settings },
+  "/analytics": { label: "Business Intelligence", icon: BarChart3 },
+  "/aruna": { label: "Inteligência Aruna", icon: Sparkles },
 };
 
 function getRouteInfo(pathname: string) {

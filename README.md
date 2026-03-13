@@ -1,32 +1,35 @@
-This is a [Next.js](https://nextjs.org) project.
+# LEXA-SAAS: O Sistema Operacional Jurídico do Brasil
 
-## Getting Started
+Bem-vindo ao repositório do **LEXA-SAAS**, um ERP de gestão jurídica de alta performance construído com Next.js 15, tRPC, Supabase e Clerk.
 
-First, run the development server:
+## 📚 Documentação do Projeto
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Para manter a raiz limpa e o projeto organizado, toda a documentação estratégica e técnica foi centralizada na pasta [**/docs**](./docs):
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* **[PRD (Product Requirements Document)](./docs/PRD.md)**: Visão de produto, domínios e regras de negócio.
+* **[SPECS (Technical Specifications)](./docs/SPECS.md)**: Arquitetura técnica, FSD, tRPC e Multitenancy.
+* **[ROADMAP](./docs/ROADMAP.md)**: Fases de desenvolvimento e milestones.
+* **[STRUCTURE](./docs/STRUCTURE.md)**: Guia da arquitetura de pastas Feature-Sliced Design.
 
-You can start editing the page by modifying `src/app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Como Iniciar
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load Inter from Google Fonts.
+1. **Instale as dependências:**
 
-## Learn More
+    ```bash
+    npm install
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Configure as variáveis de ambiente:**
+    Copie o `.env.example` para `.env` e preencha com suas chaves do Supabase e Clerk.
+3. **Inicie o ambiente de desenvolvimento:**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    ```bash
+    npm run dev
+    ```
 
-## Self-Hosting and Docker
+## 🏢 TIME LEXA
 
-The project is designed to be self-hosted using Docker. Check the [SPECS.md](SPECS.md) for more details on the infrastructure.
+Este projeto é desenvolvido e mantido por uma equipe de especialistas focada em excelência operacional. Consulte o arquivo [**.cursorrules**](./.cursorrules) para entender nossos protocolos de qualidade e guardrails de engenharia.
+
+---
+> "Excelência não é um ato, é um hábito." - TIME LEXA

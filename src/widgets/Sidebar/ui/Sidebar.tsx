@@ -48,57 +48,88 @@ interface NavModule {
 }
 
 // ─── Navigation Config ──────────────────────────────────────
-const modules: NavModule[] = [
-  { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard", color: "text-[#C5A55A]" },
-  { name: "Aruna IA", icon: Sparkles, href: "/aruna", color: "text-[#C5A55A]" },
+interface NavGroup {
+  label: string;
+  items: NavModule[];
+}
+
+const navGroups: NavGroup[] = [
   {
-    name: "Processos", icon: Gavel, color: "text-[#C5A55A]",
-    subItems: [
-      { name: "Todos os Processos", href: "/processes", icon: List },
-      { name: "Novo Processo", href: "/processes/new", icon: Plus },
-      { name: "Prazos", href: "/processes/deadlines", icon: Clock },
+    label: "Principal",
+    items: [
+      { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard", color: "text-[#C5A55A]" },
+      { name: "Aruna IA", icon: Sparkles, href: "/aruna", color: "text-[#C5A55A]" },
     ],
   },
   {
-    name: "Agenda", icon: Calendar, color: "text-emerald-500",
-    subItems: [
-      { name: "Calendário", href: "/calendar", icon: Calendar },
-      { name: "Compromissos", href: "/calendar/appointments", icon: Clock },
+    label: "Operacional",
+    items: [
+      {
+        name: "Processos", icon: Gavel, color: "text-[#C5A55A]",
+        subItems: [
+          { name: "Todos os Processos", href: "/processes", icon: List },
+          { name: "Novo Processo", href: "/processes/new", icon: Plus },
+          { name: "Prazos", href: "/processes/deadlines", icon: Clock },
+        ],
+      },
+      {
+        name: "Agenda", icon: Calendar, color: "text-emerald-500",
+        subItems: [
+          { name: "Calendário", href: "/calendar", icon: Calendar },
+          { name: "Compromissos", href: "/calendar/appointments", icon: Clock },
+        ],
+      },
+      {
+        name: "Documentos", icon: FileText, color: "text-violet-500",
+        subItems: [
+          { name: "Todos os Documentos", href: "/documents", icon: FolderOpen },
+          { name: "Minutas", href: "/documents/drafts", icon: ScrollText },
+        ],
+      },
     ],
   },
   {
-    name: "Documentos", icon: FileText, color: "text-violet-500",
-    subItems: [
-      { name: "Todos os Documentos", href: "/documents", icon: FolderOpen },
-      { name: "Minutas", href: "/documents/drafts", icon: ScrollText },
-      { name: "Contratos", href: "/documents/contracts", icon: FileText },
+    label: "Relacionamento",
+    items: [
+      {
+        name: "Clientes", icon: Users, color: "text-pink-500",
+        subItems: [
+          { name: "Lista de Clientes", href: "/crm", icon: Users },
+          { name: "Novo Cliente", href: "/crm/new", icon: UserPlus },
+        ],
+      },
     ],
   },
   {
-    name: "CRM", icon: Users, color: "text-pink-500",
-    subItems: [
-      { name: "Clientes", href: "/crm", icon: Users },
-      { name: "Novo Cliente", href: "/crm/new", icon: UserPlus },
-      { name: "Pipeline", href: "/crm/pipeline", icon: BarChart3 },
+    label: "Inteligência",
+    items: [
+      { name: "Analytics", icon: BarChart3, href: "/analytics", color: "text-blue-500" },
     ],
   },
   {
-    name: "Financeiro", icon: Wallet, color: "text-teal-500",
-    subItems: [
-      { name: "Visão Geral", href: "/finance", icon: PieChart },
-      { name: "Honorários", href: "/finance/fees", icon: Receipt },
-      { name: "Faturamento", href: "/finance/billing", icon: CreditCard },
+    label: "Gestão",
+    items: [
+      {
+        name: "Financeiro", icon: Wallet, color: "text-teal-500",
+        subItems: [
+          { name: "Visão Geral", href: "/finance", icon: PieChart },
+          { name: "Honorários", href: "/finance/fees", icon: Receipt },
+          { name: "Faturamento", href: "/finance/billing", icon: CreditCard },
+        ],
+      },
+      {
+        name: "Configurações", icon: Settings, color: "text-muted-foreground",
+        subItems: [
+          { name: "Meu Perfil", href: "/settings", icon: Users },
+          { name: "Escritório", href: "/settings/office", icon: Building2 },
+          { name: "Auditoria", href: "/backoffice/audit", icon: ScrollText },
+        ],
+      },
     ],
   },
-  {
-    name: "Backoffice", icon: ShieldCheck, color: "text-orange-500",
-    subItems: [
-      { name: "Tenants", href: "/backoffice", icon: Building2 },
-      { name: "Auditoria", href: "/backoffice/audit", icon: ScrollText },
-    ],
-  },
-  { name: "Configurações", icon: Settings, color: "text-muted-foreground", href: "/settings" },
 ];
+
+const allModules = navGroups.flatMap(g => g.items);
 
 // ─── Component ───────────────────────────────────────────────
 export function Sidebar() {
@@ -112,14 +143,14 @@ export function Sidebar() {
     setActiveModule(null);
   }, [pathname]);
 
-  const currentModule = modules.find((m) => {
+  const currentModule = allModules.find((m) => {
     if (m.href && pathname === m.href) return true;
     if (m.subItems) return m.subItems.some((sub) => pathname.startsWith(sub.href));
     return false;
   });
 
   const expandedModule = activeModule
-    ? modules.find((m) => m.name === activeModule)
+    ? allModules.find((m) => m.name === activeModule)
     : null;
 
   const showSubPanel = expandedModule?.subItems && expandedModule.subItems.length > 0;
@@ -169,47 +200,58 @@ export function Sidebar() {
             <LexaIcon size={36} />
           </Link>
 
-          {/* Module Icons */}
-          <nav className="flex flex-1 flex-col items-center gap-1">
-            {modules.map((module) => {
-              const isActive = currentModule?.name === module.name;
-              const isExpanded = activeModule === module.name;
-              const linkHref = module.href || "#";
+          {/* Module Icons grouped by Journey */}
+          <nav className="flex flex-1 flex-col items-center gap-4 w-full px-2 overflow-y-auto no-scrollbar">
+            {navGroups.map((group) => (
+              <div key={group.label} className="w-full flex flex-col items-center gap-1.5">
+                {/* Group Label (Hidden but used for structure) */}
+                <span className="text-[8px] font-bold uppercase tracking-widest text-[#C5A55A]/30 mb-0.5 lg:block hidden">
+                  {group.label.substring(0, 3)}
+                </span>
 
-              const btnEl = (
-                <button
-                  key={module.name}
-                  title={module.name}
-                  onClick={() => handleModuleClick(module)}
-                  className={cn(
-                    "relative flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-200",
-                    isActive || isExpanded
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
-                      : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-                  )}
-                >
-                  <module.icon
-                    className={cn(
-                      "h-5 w-5 transition-colors",
-                      (isActive || isExpanded) && module.color
-                    )}
-                  />
-                  {isActive && (
-                    <div className="absolute left-0 top-1/2 h-6 w-[3px] -translate-x-[2px] -translate-y-1/2 rounded-r-full bg-[#C5A55A]" />
-                  )}
-                </button>
-              );
+                {group.items.map((module) => {
+                  const isActive = currentModule?.name === module.name;
+                  const isExpanded = activeModule === module.name;
+                  const linkHref = module.href || "#";
 
-              if (module.href && !module.subItems) {
-                return (
-                  <Link key={module.name} href={linkHref} onClick={() => setMobileOpen(false)} title={module.name}>
-                    {btnEl}
-                  </Link>
-                );
-              }
+                  const btnEl = (
+                    <button
+                      key={module.name}
+                      title={module.name}
+                      onClick={() => handleModuleClick(module)}
+                      className={cn(
+                        "sidebar-nav-link relative flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-300",
+                        isActive || isExpanded
+                          ? "bg-white/10 text-sidebar-primary shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]"
+                          : "text-sidebar-foreground/45 hover:bg-white/5 hover:text-sidebar-foreground"
+                      )}
+                    >
+                      <module.icon
+                        className={cn(
+                          "sidebar-icon h-5 w-5 transition-all duration-300",
+                          (isActive || isExpanded) ? module.color : "opacity-70 group-hover:opacity-100"
+                        )}
+                      />
+                      {isActive && (
+                        <div className="absolute right-0 top-1/2 h-6 w-[2px] -translate-y-1/2 rounded-l-full bg-sidebar-primary shadow-[0_0_8px_rgba(197,165,90,0.5)]" />
+                      )}
+                    </button>
+                  );
 
-              return <div key={module.name}>{btnEl}</div>;
-            })}
+                  if (module.href && !module.subItems) {
+                    return (
+                      <Link key={module.name} href={linkHref} onClick={() => setMobileOpen(false)} title={module.name}>
+                        {btnEl}
+                      </Link>
+                    );
+                  }
+
+                  return <div key={module.name}>{btnEl}</div>;
+                })}
+                {/* Visual Separator */}
+                <div className="h-px w-4 bg-white/5 my-1" />
+              </div>
+            ))}
           </nav>
 
           <div className="mt-auto pt-4 border-t border-sidebar-border">
