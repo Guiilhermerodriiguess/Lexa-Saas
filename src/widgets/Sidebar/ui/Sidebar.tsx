@@ -2,78 +2,275 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { 
-  LayoutDashboard, 
-  Gavel, 
-  Calendar, 
-  FileText, 
-  Users, 
-  Wallet, 
+import { useState, useEffect } from "react";
+import {
+  LayoutDashboard,
+  Gavel,
+  Calendar,
+  FileText,
+  Users,
+  Wallet,
   Settings,
-  ShieldCheck
+  ShieldCheck,
+  ChevronLeft,
+  Plus,
+  List,
+  BarChart3,
+  Clock,
+  FolderOpen,
+  Receipt,
+  CreditCard,
+  UserPlus,
+  PieChart,
+  Building2,
+  ScrollText,
+  Menu,
+  X,
+  Sparkles,
+  type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
+import { LexaIcon } from "@/shared/ui/logo";
 
-const navItems = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Processos", href: "/processes", icon: Gavel },
-  { name: "Agenda", href: "/calendar", icon: Calendar },
-  { name: "Documentos", href: "/documents", icon: FileText },
-  { name: "CRM", href: "/crm", icon: Users },
-  { name: "Financeiro", href: "/finance", icon: Wallet },
-  { name: "Backoffice", href: "/backoffice", icon: ShieldCheck },
-  { name: "Configurações", href: "/settings", icon: Settings },
+// ─── Types ───────────────────────────────────────────────────
+interface SubItem {
+  name: string;
+  href: string;
+  icon: LucideIcon;
+}
+
+interface NavModule {
+  name: string;
+  icon: LucideIcon;
+  href?: string;
+  color: string;
+  subItems?: SubItem[];
+}
+
+// ─── Navigation Config ──────────────────────────────────────
+const modules: NavModule[] = [
+  { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard", color: "text-[#C5A55A]" },
+  { name: "Aruna IA", icon: Sparkles, href: "/aruna", color: "text-[#C5A55A]" },
+  {
+    name: "Processos", icon: Gavel, color: "text-[#C5A55A]",
+    subItems: [
+      { name: "Todos os Processos", href: "/processes", icon: List },
+      { name: "Novo Processo", href: "/processes/new", icon: Plus },
+      { name: "Prazos", href: "/processes/deadlines", icon: Clock },
+    ],
+  },
+  {
+    name: "Agenda", icon: Calendar, color: "text-emerald-500",
+    subItems: [
+      { name: "Calendário", href: "/calendar", icon: Calendar },
+      { name: "Compromissos", href: "/calendar/appointments", icon: Clock },
+    ],
+  },
+  {
+    name: "Documentos", icon: FileText, color: "text-violet-500",
+    subItems: [
+      { name: "Todos os Documentos", href: "/documents", icon: FolderOpen },
+      { name: "Minutas", href: "/documents/drafts", icon: ScrollText },
+      { name: "Contratos", href: "/documents/contracts", icon: FileText },
+    ],
+  },
+  {
+    name: "CRM", icon: Users, color: "text-pink-500",
+    subItems: [
+      { name: "Clientes", href: "/crm", icon: Users },
+      { name: "Novo Cliente", href: "/crm/new", icon: UserPlus },
+      { name: "Pipeline", href: "/crm/pipeline", icon: BarChart3 },
+    ],
+  },
+  {
+    name: "Financeiro", icon: Wallet, color: "text-teal-500",
+    subItems: [
+      { name: "Visão Geral", href: "/finance", icon: PieChart },
+      { name: "Honorários", href: "/finance/fees", icon: Receipt },
+      { name: "Faturamento", href: "/finance/billing", icon: CreditCard },
+    ],
+  },
+  {
+    name: "Backoffice", icon: ShieldCheck, color: "text-orange-500",
+    subItems: [
+      { name: "Tenants", href: "/backoffice", icon: Building2 },
+      { name: "Auditoria", href: "/backoffice/audit", icon: ScrollText },
+    ],
+  },
+  { name: "Configurações", icon: Settings, color: "text-muted-foreground", href: "/settings" },
 ];
 
+// ─── Component ───────────────────────────────────────────────
 export function Sidebar() {
   const pathname = usePathname();
+  const [activeModule, setActiveModule] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+    setActiveModule(null);
+  }, [pathname]);
+
+  const currentModule = modules.find((m) => {
+    if (m.href && pathname === m.href) return true;
+    if (m.subItems) return m.subItems.some((sub) => pathname.startsWith(sub.href));
+    return false;
+  });
+
+  const expandedModule = activeModule
+    ? modules.find((m) => m.name === activeModule)
+    : null;
+
+  const showSubPanel = expandedModule?.subItems && expandedModule.subItems.length > 0;
+
+  function handleModuleClick(module: NavModule) {
+    if (module.href && !module.subItems) {
+      setActiveModule(null);
+      setMobileOpen(false);
+    } else {
+      setActiveModule(activeModule === module.name ? null : module.name);
+    }
+  }
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-border/50 bg-background/60 backdrop-blur-xl transition-all duration-300">
-      <div className="flex h-full flex-col px-4 py-8">
-        <div className="mb-10 px-2">
-          <h1 className="text-2xl font-bold tracking-tighter text-foreground">
-            LEXA<span className="text-primary/60">SAAS</span>
-          </h1>
-          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/60">
-            Legal Operating System
-          </p>
-        </div>
+    <>
+      {/* ═══ MOBILE HAMBURGER ═══ */}
+      <button
+        onClick={() => setMobileOpen(!mobileOpen)}
+        className="fixed left-4 top-3.5 z-[60] flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar text-sidebar-foreground shadow-md lg:hidden"
+        aria-label="Menu"
+      >
+        {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+      </button>
 
-        <nav className="flex-1 space-y-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                  isActive 
-                    ? "bg-primary/10 text-primary shadow-[0_0_15px_rgba(0,0,0,0.05)]" 
-                    : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-                )}
-              >
-                <item.icon className={cn(
-                  "h-5 w-5 transition-transform duration-200 group-hover:scale-110",
-                  isActive ? "text-primary" : "text-muted-foreground/60 group-hover:text-foreground"
-                )} />
-                {item.name}
-                {isActive && (
-                  <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
+      {/* ═══ MOBILE OVERLAY ═══ */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+          onClick={() => { setMobileOpen(false); setActiveModule(null); }}
+        />
+      )}
 
-        <div className="mt-auto border-t border-border/40 pt-6">
-          <div className="rounded-xl border border-border/40 bg-accent/30 p-4 backdrop-blur-sm">
-            <p className="text-xs font-semibold text-foreground/80">Plano Premium</p>
-            <p className="mt-1 text-[10px] text-muted-foreground">Suporte 24/7 Ativado</p>
+      <div className="flex h-screen">
+        {/* ═══ PRIMARY SIDEBAR (Icon Rail) ═══ */}
+        <aside
+          className={cn(
+            "fixed left-0 top-0 z-50 flex h-screen w-[68px] flex-col items-center border-r border-border/40 bg-sidebar backdrop-blur-xl py-4 transition-transform duration-300",
+            mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          )}
+        >
+          {/* Brand Logo */}
+          <Link
+            href="/dashboard"
+            className="mb-8 flex h-10 w-10 items-center justify-center rounded-xl transition-transform hover:scale-105"
+            onClick={() => setMobileOpen(false)}
+          >
+            <LexaIcon size={36} />
+          </Link>
+
+          {/* Module Icons */}
+          <nav className="flex flex-1 flex-col items-center gap-1">
+            {modules.map((module) => {
+              const isActive = currentModule?.name === module.name;
+              const isExpanded = activeModule === module.name;
+              const linkHref = module.href || "#";
+
+              const btnEl = (
+                <button
+                  key={module.name}
+                  title={module.name}
+                  onClick={() => handleModuleClick(module)}
+                  className={cn(
+                    "relative flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-200",
+                    isActive || isExpanded
+                      ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                  )}
+                >
+                  <module.icon
+                    className={cn(
+                      "h-5 w-5 transition-colors",
+                      (isActive || isExpanded) && module.color
+                    )}
+                  />
+                  {isActive && (
+                    <div className="absolute left-0 top-1/2 h-6 w-[3px] -translate-x-[2px] -translate-y-1/2 rounded-r-full bg-[#C5A55A]" />
+                  )}
+                </button>
+              );
+
+              if (module.href && !module.subItems) {
+                return (
+                  <Link key={module.name} href={linkHref} onClick={() => setMobileOpen(false)} title={module.name}>
+                    {btnEl}
+                  </Link>
+                );
+              }
+
+              return <div key={module.name}>{btnEl}</div>;
+            })}
+          </nav>
+
+          <div className="mt-auto pt-4 border-t border-sidebar-border">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-accent/30">
+              <span className="text-[10px] font-bold text-[#C5A55A]">v1</span>
+            </div>
           </div>
-        </div>
+        </aside>
+
+        {/* ═══ SECONDARY SIDEBAR (Sub-menu Panel) ═══ */}
+        <aside
+          className={cn(
+            "fixed left-[68px] top-0 z-40 h-screen border-r border-border/40 bg-sidebar/95 backdrop-blur-xl transition-all duration-300 ease-in-out overflow-hidden",
+            showSubPanel ? "w-56 opacity-100" : "w-0 opacity-0"
+          )}
+        >
+          {expandedModule?.subItems && (
+            <div className="flex h-full w-56 flex-col">
+              <div className="flex items-center justify-between border-b border-sidebar-border px-4 py-5">
+                <div className="flex items-center gap-2.5">
+                  <expandedModule.icon className={cn("h-4 w-4", expandedModule.color)} />
+                  <h2 className="text-sm font-semibold tracking-tight">{expandedModule.name}</h2>
+                </div>
+                <button
+                  onClick={() => setActiveModule(null)}
+                  className="rounded-md p-1 text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+              </div>
+
+              <nav className="flex-1 space-y-0.5 p-3">
+                {expandedModule.subItems.map((item) => {
+                  const isSubActive = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(
+                        "flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-all duration-150",
+                        isSubActive
+                          ? "bg-[#C5A55A]/10 text-[#C5A55A]"
+                          : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+                      )}
+                    >
+                      <item.icon className={cn("h-4 w-4", isSubActive ? "text-[#C5A55A]" : "text-muted-foreground/60")} />
+                      {item.name}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          )}
+        </aside>
+
+        {/* Click-outside overlay for sub-panel (desktop) */}
+        {showSubPanel && (
+          <div className="fixed inset-0 z-30 hidden lg:block" onClick={() => setActiveModule(null)} />
+        )}
       </div>
-    </aside>
+    </>
   );
 }

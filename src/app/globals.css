@@ -10,6 +10,11 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   
+  /* Brand Colors */
+  --color-navy: var(--navy);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -44,66 +49,73 @@
 }
 
 :root {
-  --background: oklch(0.98 0 0);
-  --foreground: oklch(0.12 0.02 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.12 0.02 250);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.12 0.02 250);
-  --primary: oklch(0.25 0.05 250);
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.92 0.01 250);
-  --secondary-foreground: oklch(0.25 0.05 250);
-  --muted: oklch(0.95 0.01 250);
-  --muted-foreground: oklch(0.45 0.02 250);
-  --accent: oklch(0.92 0.01 250);
-  --accent-foreground: oklch(0.25 0.05 250);
-  --destructive: oklch(0.55 0.22 25);
-  --border: oklch(0.88 0.01 250);
-  --input: oklch(0.88 0.01 250);
-  --ring: oklch(0.25 0.05 250);
+  /* ─── LEXA Brand Colors ─── */
+  --navy: #1B2A4A;
+  --gold: #C5A55A;
+  --gold-light: #D4BA7A;
+
+  /* ─── Light Theme ─── */
+  --background: #FAFBFC;
+  --foreground: #1B2A4A;
+  --card: #FFFFFF;
+  --card-foreground: #1B2A4A;
+  --popover: #FFFFFF;
+  --popover-foreground: #1B2A4A;
+  --primary: #1B2A4A;
+  --primary-foreground: #FAFBFC;
+  --secondary: #F0EDE6;
+  --secondary-foreground: #1B2A4A;
+  --muted: #F5F3EF;
+  --muted-foreground: #6B7280;
+  --accent: #F0EDE6;
+  --accent-foreground: #1B2A4A;
+  --destructive: #DC2626;
+  --border: #E5E2DB;
+  --input: #E5E2DB;
+  --ring: #C5A55A;
   --radius: 0.75rem;
 
-  /* Sidebar */
-  --sidebar: oklch(0.98 0.005 250);
-  --sidebar-foreground: oklch(0.2 0.02 250);
-  --sidebar-primary: oklch(0.25 0.05 250);
-  --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.94 0.01 250);
-  --sidebar-accent-foreground: oklch(0.25 0.05 250);
-  --sidebar-border: oklch(0.9 0.01 250);
-  --sidebar-ring: oklch(0.25 0.05 250);
+  /* Sidebar Light */
+  --sidebar: #FAFBFC;
+  --sidebar-foreground: #1B2A4A;
+  --sidebar-primary: #C5A55A;
+  --sidebar-primary-foreground: #1B2A4A;
+  --sidebar-accent: #F0EDE6;
+  --sidebar-accent-foreground: #1B2A4A;
+  --sidebar-border: #E5E2DB;
+  --sidebar-ring: #C5A55A;
 }
 
 .dark {
-  --background: oklch(0.1 0.02 250);
-  --foreground: oklch(0.95 0.01 250);
-  --card: oklch(0.12 0.03 250 / 0.8);
-  --card-foreground: oklch(0.95 0.01 250);
-  --popover: oklch(0.12 0.03 250);
-  --popover-foreground: oklch(0.95 0.01 250);
-  --primary: oklch(0.85 0.02 250);
-  --primary-foreground: oklch(0.1 0.02 250);
-  --secondary: oklch(0.18 0.03 250);
-  --secondary-foreground: oklch(0.95 0.01 250);
-  --muted: oklch(0.18 0.03 250);
-  --muted-foreground: oklch(0.65 0.02 250);
-  --accent: oklch(0.2 0.04 250);
-  --accent-foreground: oklch(0.95 0.01 250);
-  --destructive: oklch(0.5 0.2 25);
-  --border: oklch(0.25 0.03 250 / 0.5);
-  --input: oklch(0.25 0.03 250 / 0.5);
-  --ring: oklch(0.85 0.02 250);
+  /* ─── Dark Theme (Navy-based) ─── */
+  --background: #0C1220;
+  --foreground: #F0EDE6;
+  --card: rgba(27, 42, 74, 0.4);
+  --card-foreground: #F0EDE6;
+  --popover: #111827;
+  --popover-foreground: #F0EDE6;
+  --primary: #C5A55A;
+  --primary-foreground: #0C1220;
+  --secondary: rgba(27, 42, 74, 0.5);
+  --secondary-foreground: #F0EDE6;
+  --muted: rgba(27, 42, 74, 0.4);
+  --muted-foreground: #8B95A5;
+  --accent: rgba(197, 165, 90, 0.15);
+  --accent-foreground: #F0EDE6;
+  --destructive: #EF4444;
+  --border: rgba(197, 165, 90, 0.12);
+  --input: rgba(197, 165, 90, 0.12);
+  --ring: #C5A55A;
 
   /* Sidebar Dark */
-  --sidebar: oklch(0.08 0.02 250);
-  --sidebar-foreground: oklch(0.9 0.01 250);
-  --sidebar-primary: oklch(0.85 0.02 250);
-  --sidebar-primary-foreground: oklch(0.1 0.02 250);
-  --sidebar-accent: oklch(0.15 0.04 250);
-  --sidebar-accent-foreground: oklch(0.95 0.01 250);
-  --sidebar-border: oklch(0.18 0.03 250);
-  --sidebar-ring: oklch(0.85 0.02 250);
+  --sidebar: #080E1A;
+  --sidebar-foreground: #E5E2DB;
+  --sidebar-primary: #C5A55A;
+  --sidebar-primary-foreground: #0C1220;
+  --sidebar-accent: rgba(197, 165, 90, 0.1);
+  --sidebar-accent-foreground: #F0EDE6;
+  --sidebar-border: rgba(197, 165, 90, 0.08);
+  --sidebar-ring: #C5A55A;
 }
 
 @layer base {

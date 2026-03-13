@@ -3,6 +3,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "next-themes";
 import { ptBR } from "@clerk/localizations";
+import { Toaster } from "sonner";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -14,6 +15,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
         disableTransitionOnChange
       >
         {children}
+        <Toaster
+          position="bottom-right"
+          richColors
+          closeButton
+          theme="system"
+        />
       </ThemeProvider>
     </ClerkProvider>
   );
